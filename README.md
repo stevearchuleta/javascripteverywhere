@@ -1,3 +1,8 @@
+
+NOTE:  I coded everything in the src directory (using the book as a guide).  I did not cut and paste, nor did I cheat my learning process in any form.  My objective was to build another full stack app to learn and pad my gitHub profile.  I intend to work as a full stack developer in the tech industry.  - Steve Archuleta (2021)
+
+
+
 <img src="cover.png" width="200" align="right" />
 
 # JavaScript Everywhere API
