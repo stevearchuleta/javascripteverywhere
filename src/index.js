@@ -4,6 +4,7 @@
 // =========================
 
 
+
 // =========================
 // Express.js Framework 
 // To build a server-side web app that will serve as the basis for the backend of my API
@@ -30,23 +31,45 @@ const PORT = process.env.PORT || 4000;
 
 
 // =========================
-// GraphQL application schema
+// An array of note objects as data that can be served by my API
+// This is a temporary "in-memory" data representation that will eventually be replaced with a true database.
+// =========================
+let note = [
+    {id: '1', content: 'This is a note', author: "Steve Archuleta"},
+    {id: '2', content: 'This is a anotehr note', author: "Randy Neely"},
+    {id: '3', content: 'Oh hey look, yet another note', author: "Lorraine Archuleta"}
+];
+
+
+// =========================
+// GraphQL Application Schema (its fundamental component is object type)
 // This is GraphQL schema language
+// Herein, I created a GraphQL object type of Note and a GraphQL object of type Query -- these could be named Pizza or Car or User
+// The GraphQL object type Note is instructed to return scalar types of ID and String (NOTE: GraphQL language contains the following 5 scalar types: String, Boolean, Int, Float, and ID); the ! denotes field values that GraphQL must return, they're non-nullable.
+// The GraphQL object type Query is instructed to return scalar type of String and array type of [Note]
 // =========================
 const typeDefs = gql `
+type Note {
+    id: ID!
+    content: String!
+    author: String!
+}
 type Query {
     hello: String
+    notes: [Note!]!
 }
+
 `;
 
 
 // =========================
-// A necessary GraphQL resolver function for my schema fields; resolvers return a value to the user
+// A necessary GraphQL resolver function for my schema fields; resolvers return a value (or array of values) to the user
 // =========================
 const resolvers = {
     Query: {
-        hello: () => 'Hello world!'
-    }
+        hello: () => 'Hello world!',
+        notes: () => note
+    },
 };
 
 
