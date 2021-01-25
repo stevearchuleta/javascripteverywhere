@@ -4,7 +4,6 @@
 // =========================
 
 
-
 // =========================
 // Express.js Framework 
 // To build a server-side web app that will serve as the basis for the backend of my API
@@ -24,10 +23,28 @@ const { ApolloServer, gql } = require('apollo-server-express');
 
 
 // =========================
+// Import .env configuration file
+// =========================
+require('dotenv').config();
+
+
+// =========================
+// Import db.js file
+// =========================
+const db = require('./db');
+
+
+// =========================
 // Run my server on a port that is either specified in my .env file or port 4000
 // Dynamically sets the port in the Node .env environment or port 4000 when no port is specified
 // =========================
 const PORT = process.env.PORT || 4000;
+
+
+// =========================
+// Store DB_HOST value into its own variable
+// =========================
+const DB_HOST = process.env.DB_HOST;
 
 
 // =========================
@@ -59,7 +76,9 @@ type Query {
     notes: [Note!]!
     note(id:ID!): Note!
 }
-
+type Mutation {
+    newNote(content: String!): Note!
+}
 `;
 
 
@@ -74,6 +93,17 @@ const resolvers = {
             return notes.find(note => note.id === args.id)
         }
     },
+    Mutation: {
+        newNote: (parent, args) => {
+            let noteValue = {
+                id: String(notes.length + 1),
+                content: args.content,
+                author: "Manuel Archuleta"
+            };
+            notes.push(noteValue);
+            return noteValue; 
+        }
+    }
 };
 
 
@@ -81,6 +111,12 @@ const resolvers = {
 // Create an app object
 // =========================
 const app = express();
+
+
+// =========================
+// Call MongoDB connection
+// =========================
+db.connect(DB_HOST);
 
 
 // =========================
@@ -105,8 +141,9 @@ app.listen(PORT, () => {
     ) 
 }); 
 
+
 /*
 NOTE:   do not forget to 'run' this app in the terminal before accessing localhost:4000
-NOTE:   in terminal:  from the api-master directory, node src/index.js; ctrl c to cancel process
+NOTE:   in terminal:  from the notedly root directory, node src/index.js; ctrl c to cancel process
 NOTE:   or... even better... npm run dev (this will enact the nodemon script in package.json)
 */
