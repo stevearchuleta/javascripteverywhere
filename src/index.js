@@ -95,7 +95,9 @@ type Mutation {
 const resolvers = {
     Query: {
         hello: () => 'Hello world!',
-        notes: () => notes,
+        notes: async () => {
+            return await models.Note.find()
+        },
         note: (parent, args) => {
             return notes.find(note => note.id === args.id)
         }
@@ -133,7 +135,8 @@ const server = new ApolloServer({ typeDefs, resolvers });
 
 
 // =========================
-//  Apply GraphQL Middleware (...and set path to /api)
+// Apply GraphQL Middleware (...and set path to /api)
+// Therefore, because of the app.listen() method below, when I run this server, the app express() object will be available at http://localhost:4000/api
 // =========================
 server.applyMiddleware({ app, path: '/api' });
 

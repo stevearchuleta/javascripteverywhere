@@ -30,11 +30,11 @@ const noteSchema = new mongoose.Schema(
         // =========================
         timestamps: true
     }
-);
+); 
 
 
 // =========================
-// Define the 'Note' model with schema ('Note' is the model name)
+// Define the 'Note' model with noteSchema ('Note' is the model name)
 // =========================
 const Note = mongoose.model('Note', noteSchema);
 
