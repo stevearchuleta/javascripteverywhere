@@ -18,9 +18,11 @@ const express = require('express');
 
 // =========================
 // Pass apollo-server-express dependency to the Node.js require method; allows me to serve data as a GraphQL API
+// The script for my gql schema is written in the schema.js file 
+// This external gql schema must be imported as typeDefs, which will be passed as an argument to a new instance of ApolloServer (below) 
 // =========================
-const { ApolloServer, gql } = require('apollo-server-express');
-
+const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./schema')
 
 // =========================
 // Import .env configuration file
@@ -65,32 +67,13 @@ let notes = [
 ];
 
 
-// =========================
-// GraphQL Application Schema (its fundamental component is object type)
-// This is GraphQL schema language
-// Herein, I created a GraphQL object type of Note and a GraphQL object of type Query -- these could be named Pizza or Car or User
-// The GraphQL object type Note is instructed to return scalar types of ID and String (NOTE: GraphQL language contains the following 5 scalar types: String, Boolean, Int, Float, and ID); the ! denotes field values that GraphQL must return, they're non-nullable.
-// The GraphQL object type Query is instructed to return scalar type of String, array type of [Note], and/or a single Note based on a specific id value
-// =========================
-const typeDefs = gql `
-type Note {
-    id: ID!
-    content: String!
-    author: String!
-}
-type Query {
-    hello: String
-    notes: [Note!]!
-    note(id:ID!): Note!
-}
-type Mutation {
-    newNote(content: String!): Note!
-}
-`;
+
 
 
 // =========================
-// A necessary GraphQL resolver function for my schema fields; resolvers return a value, or an array of values, or a specified value to the user
+// A necessary GraphQL resolver function for my schema fields; 
+// Resolvers can Mutate or... return a value, or an array of values, or a specified value to the user via Queries
+// MongoDB model's create() method, find() method, findById() method 
 // =========================
 const resolvers = {
     Query: {
