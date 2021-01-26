@@ -35,6 +35,13 @@ const db = require('./db');
 
 
 // =========================
+// Import my all of my database model codes 
+// This is made possible by the export.modules object in my models index.js file
+// =========================
+const models = require('./models');
+
+
+// =========================
 // Run my server on a port that is either specified in my .env file or port 4000
 // Dynamically sets the port in the Node .env environment or port 4000 when no port is specified
 // =========================
