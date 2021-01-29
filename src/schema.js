@@ -11,12 +11,17 @@ const { gql } = require('apollo-server-express');
 // The GraphQL object type Note is instructed to return scalar types of ID and String (NOTE: GraphQL language contains the following 5 scalar types: String, Boolean, Int, Float, and ID); the ! denotes field values that GraphQL must return, they're non-nullable.
 // The GraphQL object type Query is instructed to return scalar type of String, array type of [Note], and/or a single Note based on a specific id value
 // The GraphQL object type Mutation is instructed to return a Note
+// A custom scalar type of DateTime was created because GraphQL does not include a built-in date scaler type
 // =========================
 module.exports = gql `
+scaler DateTime
+
 type Note {
     id: ID!
     content: String!
     author: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 type Query {
     hello: String

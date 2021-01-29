@@ -15,8 +15,14 @@ const Query = require('./query');
 // =========================
 const Mutation = require('./mutation');
 
+// =========================
+// Import my mutation module
+// =========================
+const { GrapgQLDateTime } = require('grapgql-iso-date');
+
 
 module.exports = {
     Query,
-    Mutation   
+    Mutation,
+    DateTime: GrapgQLDateTime 
 };
