@@ -8,6 +8,14 @@ module.exports = {
         return await models.Note.create({
             content: args.content,
             author: "Steve Archuleta"
-    });
-    } 
-}
+        })
+    },
+    deleteNote: async(parent, { id }, { models }) => {
+        try {
+            await models.Note.findOneAndRemove({ _id: id });
+            return true;
+        }   catch (err) {
+        return false;
+        }
+    }
+} 

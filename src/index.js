@@ -104,7 +104,7 @@ server.applyMiddleware({ app, path: '/api' });
 
 // =========================
 // Make my app locally available on port 400 http://localhost:4000
-// Template leteral syntax
+// Template leteral syntax (is a template string that allows for a JS embedded exression, such as: ${...})
 // =========================
 app.listen(PORT, () => {
     console.log(
