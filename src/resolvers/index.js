@@ -16,13 +16,13 @@ const Query = require('./query');
 const Mutation = require('./mutation');
 
 // =========================
-// Import my mutation module
+// Import graphql-iso-date package
 // =========================
-const { GrapgQLDateTime } = require('grapgql-iso-date');
+const { GraphQLDateTime } = require('graphql-iso-date');
 
 
 module.exports = {
     Query,
     Mutation,
-    DateTime: GrapgQLDateTime 
+    DateTime: GraphQLDateTime 
 };

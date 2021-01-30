@@ -1,5 +1,5 @@
 // =========================
-// Create a Mongoose schema
+// Create a Mongoose note schema
 // =========================
 
 // =========================
@@ -11,7 +11,6 @@ const mongoose = require('mongoose');
 // =========================
 // Define the/a note's database schema
 // Define schema within the noteSchema variable
-// This is a hadcoded temporary string representing the author
 // =========================
 const noteSchema = new mongoose.Schema(
     {
