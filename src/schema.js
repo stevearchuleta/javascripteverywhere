@@ -24,7 +24,7 @@ type Note {
     updatedAt: DateTime!
 }
 type User {
-    id: _ID!
+    id: ID!
     username: String!
     email: String!
     avatar: String!

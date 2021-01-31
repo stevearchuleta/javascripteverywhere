@@ -1,6 +1,7 @@
 // =========================
 // Resolvers can either Mutate, or... they return a value, or an array of values, or a specified value to the user via Queries
-// Resolver Functions MongoDB model's create() method, find() method, findById() method 
+// Resolver Functions:
+// MongoDB model's create() method, find() method, findById() method 
 // =========================
 
 
@@ -44,7 +45,7 @@ module.exports = {
             }
         )
     },
-    signUp: async(parent, { username, email, password }, { models }) => {
+    signUp: async (parent, { username, email, password }, { models }) => {
 
         // =========================
         // Normalize email address
@@ -75,13 +76,46 @@ module.exports = {
         return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         
         } catch (err) {
-          console.error(err);
+          console.log(err);
 
         // =========================
         // If there is a problem creating the account, throw an error
         // =========================
-        throw new Error('There was an error creating this account.')
+        throw new Error('There was an error creating this account.');
 
         }
+    },
+    signIn: async (parent, { username, email, password }, { models }) => {
+        if (email) {
+            
+            // =========================
+            // Normalize email address
+            // =========================
+            email = email.trim().toLowerCase();
+        }
+        const user = await models.User.findOne({
+            $or: [{ username, password }]
+        })
+
+        // =========================
+        // If no user is found, throw an authentication error
+        // =========================
+        if (!user) {
+            throw new AuthenticationError('There was an error signing in');
+        }
+        
+        // =========================
+        // If the passwords do not match, throw an authentication error
+        // =========================
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) {
+            throw new AuthenticationError('There was an error signing in');
+        }
+
+         // =========================
+        // Create and return the JsonWebToken
+        // =========================
+        return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     }
+
 } 
