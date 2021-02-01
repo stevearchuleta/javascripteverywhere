@@ -54,6 +54,12 @@ const resolvers = require('./resolvers');
 
 
 // =========================
+// Import jsonwebtoken module
+// =========================
+const jwt = require('jsonwebtoken');
+
+
+// =========================
 // Run my server on a port that is either specified in my .env file or port 4000
 // Dynamically sets the port in the Node .env environment or port 4000 when no port is specified
 // =========================
@@ -85,12 +91,30 @@ db.connect(DB_HOST);
 // Resolvers can either Mutate, or... they return a value, or an array of values, or a specified value to the user via Queries
 // Resolver Functions MongoDB model's create() method, find() method, findById() method 
 // The context function returns my database models by adding the db to the contex
+// Add the user to the resolver context, retrieve and verify the token from the header of the request, then add the user's info to the context.
 // =========================
 const server = new ApolloServer({ 
     typeDefs, 
     resolvers,
-    context: () => {
-        return { models }
+    context: ({ req }) => {
+        
+        // =========================
+        // Get the user token from the request headers
+        // =========================
+        const token = req.headers.authorization;
+
+
+        // =========================
+        // Try to retrieve a user with the token
+        // =========================
+        const user = getUser(token);
+
+        //console.log(user);
+
+        // =========================
+        // Add the database models and the user to the context
+        // =========================
+        return { models, user }
     }
 });
 
@@ -111,6 +135,29 @@ app.listen(PORT, () => {
         `🌎  ==> GraphQL Server (The GraphQL Playground) is now running at http://localhost:${PORT}${server.graphqlPath}`
     ) 
 }); 
+
+
+// =========================
+// Get the user information from the JWT
+// =========================
+const getUser = token => {
+    if (token) {
+        try {
+
+            // =========================
+            // Return the user information from the token
+            // =========================
+            return jwt.verify(token, process.env.JWT_SECRET);
+        
+        } catch (err) {
+
+            // =========================
+            // If there is a problem with the token, throw an error
+            // =========================
+            throw new Error('Session invalid')
+        }
+    }
+};
 
 
 /*

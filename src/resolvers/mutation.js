@@ -93,8 +93,9 @@ module.exports = {
             // =========================
             email = email.trim().toLowerCase();
         }
+        
         const user = await models.User.findOne({
-            $or: [{ username, password }]
+            $or: [{ username }, { password }]
         })
 
         // =========================
