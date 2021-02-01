@@ -6,6 +6,13 @@
 
 
 // =========================
+// Require the Mongoose Library
+// The Mongoose Object Document Mapper (ODM) is a schema-based modeling library that simplifies working with MongoDB in a Node.js environment 
+// Herein, the mongoose package will appropriately assign cross-referencing MongoDB object IDs to my fields. 
+// =========================
+const mongoose = require('mongoose');
+
+// =========================
 // Import all of the requred packages necessary to write my signUp mutation
 // =========================
 const bcrypt = require('bcrypt');
@@ -15,11 +22,24 @@ require('dotenv').config();
 const gravatar = require('../util/gravatar');
 
 
+
+
+
 module.exports = {
-    newNote: async (parent, args, { models }) => {
+    newNote: async (parent, args, { models, user }) => {
+        
+        
+        // =========================
+        // After adding the users context as a function parameter...
+        // Then check if a user context actually exists for the newNote mutation; if not throw an error
+        // =========================
+        if (!user) {
+            throw new AuthenticationError('You must be signed in to create a note');
+        }
+
         return await models.Note.create({
             content: args.content,
-            author: "Steve Archuleta"
+            author: mongoose.Types.ObjectId(user.id)
         })
     },
     deleteNote: async(parent, { id }, { models }) => {
