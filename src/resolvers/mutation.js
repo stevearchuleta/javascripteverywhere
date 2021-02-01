@@ -32,6 +32,8 @@ module.exports = {
         // =========================
         // After adding the users context as a function parameter...
         // Then check if a user context actually exists for the newNote mutation; if not throw an error
+        // Has the user been passed to the context?
+        // Is the user the owner of the note?
         // =========================
         if (!user) {
             throw new AuthenticationError('You must be signed in to create a note');
@@ -42,15 +44,78 @@ module.exports = {
             author: mongoose.Types.ObjectId(user.id)
         })
     },
-    deleteNote: async(parent, { id }, { models }) => {
+    deleteNote: async(parent, { id }, { models, user }) => {
+        
+        
+        // =========================
+        // After adding the users context as a function parameter...
+        // Then check if a user context actually exists for the deleteNote mutation; if not throw an error
+        // Has the user been passed to the context?
+        // Is the user the owner of the note?
+        // =========================
+        if (!user) {
+            throw new AuthenticationError('You must be signed in to delete a note');
+        }
+        
+        // =========================
+        // Find the note
+        // =========================
+        const note = await models.Note.findById(id)
+
+
+        // =========================
+        // If the note owner and the current user do not match, then throw a forbidden error
+        // =========================
+        if (note && String(note.author) !== user.id) {
+            throw new ForbiddenError("You do not have permission to delete this note.");
+        }
+        
         try {
-            await models.Note.findOneAndRemove({ _id: id });
+
+        // =========================
+        // If the note owner and the current user do match, then remove the note
+        // =========================
+
+            await note.remove();
             return true;
         }   catch (err) {
-        return false;
+
+            // =========================
+            // If an error occurs during the removal of the note, then return false
+            // =========================    
+            return false;
         }
     },
-    updateNote: async(parent, { content, id }, { models }) => {
+    updateNote: async(parent, { content, id }, { models, user }) => {
+        
+        
+        // =========================
+        // After adding the users context as a function parameter...
+        // Then check if a user context actually exists for the deleteNote mutation; if not throw an error
+        // Has the user been passed to the context?
+        // Is the user the owner of the note?
+        // =========================
+        if (!user) {
+            throw new AuthenticationError('You must be signed in to delete a note');
+        }
+        
+
+        // =========================
+        // Find the note
+        // =========================
+        const note = await models.Note.findById(id)
+
+        // =========================
+        // If the note owner and the current user do not match, then throw a forbidden error
+        // =========================
+        if (note && String(note.author) !== user.id) {
+            throw new ForbiddenError("You do not have permission to update this note.");
+        }
+
+
+        // =========================
+        // Update the note in the database and return the updated note
+        // =========================
         return await models.Note.findOneAndUpdate(
             {
                 _id: id
