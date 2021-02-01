@@ -202,6 +202,67 @@ module.exports = {
         // Create and return the JsonWebToken
         // =========================
         return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    }
+    },
+    toggleFavorite: async (parent, { id }, { models, user }) => {
+        
+        // =========================
+        // If no user is found, throw an authentication error
+        // =========================
+        if (!user) {
+            throw new AuthenticationError('There was an error signing in');
+        }
 
+
+        // =========================
+        // Has the user already favorited this note? Check to see...
+        // =========================
+        let noteCheck = await models.Note.findById(id);
+        const hasUser = noteCheck.favoritedBy.indexOf(user.id);
+        
+        
+        // =========================
+        // If the user already exists in the favoriteCount list, remove them, then decrement favoriteCount by 1
+        // =========================
+        if (hasUser >= 0) {
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $pull: {
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
+                    },
+                    $sync: {
+                        favoriteCount: -1
+                    }
+                },
+                {
+                // =========================
+                // In order to return the updated document, set new to true
+                // =========================
+                new: true
+                }
+            );
+        }   else {
+
+            // =========================
+            // If the user does not exists in the favoriteCount list, add them, then increment favoriteCount by 1
+            // =========================
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
+                    },
+                    $sync: {
+                        favoriteCount: 1
+                    }
+                },
+                {
+                // =========================
+                // In order to return the updated document, set new to true
+                // =========================
+                new: true
+                }
+            );
+        }
+    }
 } 
