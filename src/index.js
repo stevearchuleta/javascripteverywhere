@@ -17,6 +17,17 @@ const express = require('express');
 
 
 // =========================
+// Pass express helmet dependency (protective middleware against common web vulnerabilities) into the Node.js require method
+// =========================
+const helmet = require('helmet');
+
+
+// =========================
+// Pass express CORS dependency (cross origin resourse sharing) into the Node.js require method
+// =========================
+const cors = require('cors');
+
+// =========================
 // Pass apollo-server-express dependency to the Node.js require method; allows me to serve data as a GraphQL API
 // =========================
 const { ApolloServer } = require('apollo-server-express');
@@ -76,6 +87,18 @@ const DB_HOST = process.env.DB_HOST;
 // Create an app object
 // =========================
 const app = express();
+
+
+// =========================
+// call helmet middleware function as an argument to expresses use() method 
+// =========================
+app.use(helmet());
+
+
+// =========================
+// call cors middleware function as an argument to expresses use() method; enable cross origin requests from all domains
+// =========================
+app.use(cors());
 
 
 // =========================
