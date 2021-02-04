@@ -49,4 +49,9 @@ type Mutation {
     signIn(username: String, email: String, password: String!): String!
     toggleFavorite(id: ID!): Note!
 }
+type NoteFeed {
+    notes: [Note]!
+    cursor: String!
+    hasNextPage: Boolean!
+}
 `;
