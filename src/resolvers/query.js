@@ -8,7 +8,7 @@
 
 module.exports = { 
     notes: async (parent, args, { models }) => {
-        return await models.Note.find()
+        return await models.Note.find().limit(100);
     },
     note: async (parent, args, { models }) => {
         return await models.Note.findById(args.id);
@@ -48,7 +48,7 @@ module.exports = {
         // lt means less than, in the MongoDB query language
         // =========================
         if (cursor) {
-            cursorQuery = { _id: { $lt: cursor } }
+            cursorQuery = { _id: { $lt: cursor } };
         }
 
 
@@ -59,7 +59,8 @@ module.exports = {
 
 
         // =========================
-        // If the number of notes I find exceeds my limit
+        // If the number of notes I find exceeds my limit,
+        // then slice notes array from the end of the array (-1), such that the last item is removed to meet my limit
         // =========================
         if ( notes.length > limit ) {
             hasNextPage = true;
@@ -78,6 +79,6 @@ module.exports = {
             notes, 
             cursor: newCursor, 
             hasNextPage
-        }
+        };
     }
 }
