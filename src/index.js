@@ -17,15 +17,28 @@ const express = require('express');
 
 
 // =========================
-// Pass express helmet dependency (protective middleware against common web vulnerabilities) into the Node.js require method
+// Pass helmet dependency (protective middleware against common web vulnerabilities) into the Node.js require method
 // =========================
 const helmet = require('helmet');
 
 
 // =========================
-// Pass express CORS dependency (cross origin resourse sharing) into the Node.js require method
+// Pass CORS dependency (cross origin resourse sharing) into the Node.js require method
 // =========================
 const cors = require('cors');
+
+
+// =========================
+// Pass graphql-depth-limit dependency into the Node.js require method
+// =========================
+const depthLimit = require('graphql-depth-limit');
+
+
+// =========================
+// Pass graphql-depth-limit dependency into the Node.js require method
+// =========================
+const { createComplexityLimitRule } = require('graphql-validation-complexity');
+
 
 // =========================
 // Pass apollo-server-express dependency to the Node.js require method; allows me to serve data as a GraphQL API
@@ -119,6 +132,7 @@ db.connect(DB_HOST);
 const server = new ApolloServer({ 
     typeDefs, 
     resolvers,
+    validationRules: [depthLimit(5), createComplexityLimitRule(1000)],
     context: ({ req }) => {
         
         // =========================
